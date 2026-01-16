@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apex Centro Automotivo - Engenharia de Precisão para Seu Veículo</title>
+    <meta name="description" content="Especialistas em câmbio automático, diagnóstico eletrônico e revisão de precisão. A tecnologia das pistas, agora para o seu carro.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;700&family=Poppins:wght@700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for Icons (via CDN) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- ======================================================================= -->
+    <!-- ESTILOS (CSS) EMBUTIDOS                                               -->
+    <!-- ======================================================================= -->
+    <style>
+        /* ----- VARIÁVEIS GLOBAIS ----- */
+        :root {
+            --cinza-chumbo: #121212;
+            --branco-gelo: #F5F5F5;
+            --vermelho-racing: #E60023;
+            --ciano-tecnico: #00BFFF;
+            --cinza-metalico: #444444;
+            --font-sans: 'Inter', sans-serif;
+            --font-heading: 'Poppins', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        /* ----- RESET E ESTILOS BASE ----- */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--cinza-chumbo);
+            color: var(--branco-gelo);
+            font-family: var(--font-sans);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Efeito de ruído no fundo */
+        body::after {
+            content: "";
+            background-image: url('assets/noise.png');
+            background-repeat: repeat;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.04;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* ----- UTILITÁRIOS ----- */
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background-color: var(--vermelho-racing);
+            color: var(--branco-gelo);
+            font-family: var(--font-mono);
+            font-weight: 700;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(230, 0, 35, 0.3);
+        }
+
+        .section-title {
+            font-family: var(--font-heading);
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 4rem;
+            color: var(--branco-gelo);
+            text-transform: uppercase;
+        }
+
+        .highlight {
+            color: var(--vermelho-racing);
+        }
+
+        /* ----- ANIMAÇÃO DE SCROLL ----- */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .animate-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ----- CABEÇALHO ----- */
+        .fixed-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            transition: all 0.4s ease;
+            padding: 1rem 0;
+        }
+
+        .fixed-header.scrolled {
+            background-color: rgba(18, 18, 18, 0.5);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--cinza-metalico);
+        }
+
+        .fixed-header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            height: 48px;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .header-cta span { display: none; }
+        @media (min-width: 768px) {
+            .header-cta span { display: inline; }
+        }
+
+        /* ----- SEÇÃO HERO ----- */
+        #hero {
+            height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            overflow: hidden;
+        }
+        .hero-video, .hero-mobile-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -2;
+        }
+        .hero-mobile-bg { display: none; background-size: cover; background-position: center; }
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, rgba(18, 18, 18, 0.9), rgba(18, 18, 18, 0.5));
+            z-index: -1;
+        }
+        .hero-content { z-index: 1; }
+        .hero-content h1 {
+            font-family: var(--font-heading);
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .hero-content p {
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            max-width: 650px;
+            margin: 1.5rem auto 2.5rem;
+            color: rgba(245, 245, 245, 0.8);
+        }
+        .hero-cta { font-size: 1.1rem; padding: 16px 32px; }
+        @media (max-width: 768px) {
+            .hero-video { display: none; }
+            .hero-mobile-bg { display: block; }
+        }
+
+        /* ----- SEÇÃO PROVA SOCIAL ----- */
+        #social-proof {
+            padding: 3rem 0;
+            text-align: center;
+            border-bottom: 1px solid var(--cinza-metalico);
+        }
+        #social-proof p {
+            font-family: var(--font-mono);
+            margin-bottom: 2rem;
+            color: rgba(245, 245, 245, 0.7);
+        }
+        .logos-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+        }
+        .logos-container img {
+            height: 35px;
+            filter: grayscale(100%) brightness(3);
+            opacity: 0.7;
+            transition: all 0.3s ease;
+        }
+        .logos-container img:hover {
+            filter: none;
+            opacity: 1;
+        }
+
+        /* ----- SEÇÃO DNA DE PISTA ----- */
+        #dna-section {
+            padding: 6rem 0;
+            display: flex;
+            align-items: center;
+            gap: 4rem;
+        }
+        .dna-image, .dna-content {
+            flex: 1;
+        }
+        .dna-image img {
+            width: 100%;
+            border-radius: 8px;
+        }
+        .dna-content h2 {
+            font-family: var(--font-heading);
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+        }
+        .dna-content p {
+            font-size: 1.1rem;
+            color: rgba(245, 245, 245, 0.8);
+        }
+        @media (max-width: 992px) {
+            #dna-section {
+                flex-direction: column;
+            }
+            .dna-image { order: -1; } /* Imagem vai para cima no mobile */
+        }
+
+        /* ----- SEÇÃO BENTO GRID ----- */
+        #services { padding: 6rem 0; }
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(2, 250px);
+            gap: 1.5rem;
+        }
+        .bento-item {
+            background: linear-gradient(145deg, #1e1e1e, #161616);
+            border-radius: 12px;
+            padding: 2rem;
+            border: 1px solid var(--cinza-metalico);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            color: var(--branco-gelo);
+        }
+        .bento-item:hover {
+            transform: translateY(-5px);
+            border-color: var(--ciano-tecnico);
+            background-color: rgba(0, 191, 255, 0.05);
+            box-shadow: 0 0 25px rgba(0, 191, 255, 0.2);
+        }
+        .bento-item .icon {
+            font-size: 2.5rem;
+            color: var(--ciano-tecnico);
+            margin-bottom: 1rem;
+        }
+        .bento-item h3 {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .bento-item p {
+            color: rgba(245, 245, 245, 0.7);
+        }
+        .item-1 { grid-column: 1 / 3; }
+        .item-2 { grid-column: 3 / 4; }
+        .item-3 { grid-column: 1 / 2; }
+        .item-4 { grid-column: 2 / 4; }
+        @media (max-width: 992px) {
+            .bento-grid {
+                grid-template-columns: 1fr 1fr;
+                grid-template-rows: auto;
+            }
+            .item-1, .item-2, .item-3, .item-4, .item-5 {
+                grid-column: auto;
+                grid-row: auto;
+                min-height: 220px;
+            }
+        }
+        @media (max-width: 768px) {
+            .bento-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ----- SEÇÃO SLIDER INTERATIVO ----- */
+        #interactive-value { padding: 6rem 0; }
+        .comparison-slider {
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            margin: auto;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: ew-resize;
+            user-select: none;
+            border: 2px solid var(--cinza-metalico);
+        }
+        .image-container {
+            position: relative;
+            width: 100%;
+            height: auto;
+            aspect-ratio: 16 / 9;
+        }
+        .image-container img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            pointer-events: none;
+        }
+        .image-after {
+            clip-path: inset(0 0 0 50%);
+        }
+        .slider-handle {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            height: 100%;
+            width: 4px;
+            background: var(--branco-gelo);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+        .handle-circle {
+            width: 40px;
+            height: 40px;
+            background: var(--branco-gelo);
+            color: var(--cinza-chumbo);
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            font-size: 1.2rem;
+        }
+        .label-before, .label-after {
+            position: absolute;
+            top: 1rem;
+            font-family: var(--font-mono);
+            text-transform: uppercase;
+            background: rgba(18, 18, 18, 0.7);
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+        }
+        .label-before { left: 1rem; }
+        .label-after { right: 1rem; }
+
+        /* ----- SEÇÃO MICRO-DIAGNÓSTICO ----- */
+        #diagnostico { padding: 6rem 0; }
+        .diagnostic-container {
+            background: linear-gradient(145deg, #1a1a1a, #141414);
+            border-radius: 12px;
+            border: 1px solid var(--cinza-metalico);
+            padding: 3rem;
+            max-width: 800px;
+            margin: auto;
+        }
+        .diagnostic-step { display: none; }
+        .diagnostic-step.active { display: block; animation: fadeIn 0.5s ease; }
+        .diagnostic-step h3 {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+        .car-map { position: relative; max-width: 400px; margin: auto; }
+        .car-map img { width: 100%; opacity: 0.3; }
+        .map-point {
+            position: absolute;
+            background: var(--ciano-tecnico);
+            color: var(--cinza-chumbo);
+            border: none;
+            border-radius: 8px;
+            width: auto;
+            padding: 8px 12px;
+            font-family: var(--font-mono);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            transform: translate(-50%, -50%);
+        }
+        .map-point:hover { transform: translate(-50%, -50%) scale(1.1); background: var(--branco-gelo); }
+        .symptom-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        .symptom-btn {
+            background: var(--cinza-metalico);
+            color: var(--branco-gelo);
+            border: 1px solid transparent;
+            padding: 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: var(--font-mono);
+            font-size: 1rem;
+        }
+        .symptom-btn:hover { border-color: var(--ciano-tecnico); background: rgba(0, 191, 255, 0.1); }
+        .result { text-align: center; }
+        .result p { margin-bottom: 2rem; font-size: 1.1rem; color: rgba(245, 245, 245, 0.8); }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ----- SEÇÃO CONTATO ----- */
+        #contact {
+            padding: 6rem 0;
+            display: flex;
+            gap: 3rem;
+        }
+        .contact-info, .map-container { flex: 1; }
+        .contact-info h2 {
+            font-family: var(--font-heading);
+            font-size: 2.2rem;
+            margin-bottom: 2rem;
+        }
+        .contact-info p {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .contact-info p i { color: var(--ciano-tecnico); width: 20px; text-align: center; }
+        .map-container iframe {
+            width: 100%;
+            height: 100%;
+            min-height: 350px;
+            border-radius: 8px;
+        }
+        @media (max-width: 992px) {
+            #contact { flex-direction: column; }
+        }
+
+        /* ----- RODAPÉ ----- */
+        footer {
+            background: #0a0a0a;
+            padding: 2rem 0;
+            border-top: 1px solid var(--cinza-metalico);
+        }
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .social-icons a {
+            color: var(--cinza-metalico);
+            font-size: 1.5rem;
+            margin-left: 1rem;
+            transition: color 0.3s ease;
+        }
+        .social-icons a:hover {
+            color: var(--branco-gelo);
+        }
+
+        /* ----- RESPONSIVIDADE GERAL ----- */
+        @media (max-width: 768px) {
+            .section-title { font-size: 2rem; }
+            .dna-content h2, #contact h2 { font-size: 1.8rem; }
+            .symptom-buttons { grid-template-columns: 1fr; }
+            .footer-content { flex-direction: column; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ======================================================================= -->
+    <!-- CONTEÚDO (HTML)                                                       -->
+    <!-- ======================================================================= -->
+    <header id="main-header" class="fixed-header">
+        <div class="container">
+            <img src="assets/logo-apex.svg" alt="Apex Logo" class="logo">
+            <a href="https://wa.me/5511987654321?text=Ol%C3%A1!%20Gostaria%20de%20agendar%20uma%20avalia%C3%A7%C3%A3o." target="_blank" class="cta-button header-cta">
+                <i class="fa-brands fa-whatsapp"></i>
+                <span>AGENDAR VIA WHATSAPP</span>
+            </a>
+        </div>
+    </header>
+
+    <main>
+        <!-- SEÇÃO HERO -->
+        <section id="hero">
+            <video autoplay loop muted playsinline class="hero-video" src="assets/hero-video.mp4"></video>
+            <div class="hero-mobile-bg" style="background-image: url('assets/hero-mobile.jpg');"></div>
+            <div class="overlay"></div>
+            <div class="container hero-content">
+                <h1 class="animate-on-scroll">A PRECISÃO DAS PISTAS,<br><span class="highlight">AGORA PARA O SEU CARRO.</span></h1>
+                <p class="animate-on-scroll">Especialistas em câmbio automático, revisão completa e diagnóstico eletrônico com transparência total.</p>
+                <a href="#diagnostico" class="cta-button hero-cta animate-on-scroll">INICIAR DIAGNÓSTICO</a>
+            </div>
+        </section>
+
+        <!-- SEÇÃO PROVA SOCIAL -->
+        <section id="social-proof" class="container animate-on-scroll">
+            <p>Marcas que confiam em nossa engenharia:</p>
+            <div class="logos-container">
+                <img src="assets/logo-audi.svg" alt="Audi">
+                <img src="assets/logo-bmw.svg" alt="BMW">
+                <img src="assets/logo-mercedes.svg" alt="Mercedes-Benz">
+                <img src="assets/logo-volvo.svg" alt="Volvo">
+                <img src="assets/logo-porsche.svg" alt="Porsche">
+            </div>
+        </section>
+
+        <!-- SEÇÃO DNA DE PISTA -->
+        <section id="dna-section" class="container">
+            <div class="dna-image animate-on-scroll">
+                <img src="assets/dna-ricardo.jpg" alt="Fundador Ricardo Alves">
+            </div>
+            <div class="dna-content animate-on-scroll">
+                <h2>DNA DE PISTA, APLICADO NA RUA.</h2>
+                <p>A Apex nasceu da obsessão por performance. Nosso fundador, Ricardo Alves, ex-mecânico chefe de equipes de automobilismo, trouxe a metodologia e a precisão das corridas para a manutenção do seu veículo. Aqui, cada serviço é executado como uma parada de pit stop: com máxima eficiência, tecnologia de ponta e zero margem para erro.</p>
+            </div>
+        </section>
+
+        <!-- SEÇÃO BENTO GRID -->
+        <section id="services" class="container">
+            <h2 class="section-title animate-on-scroll">NOSSOS SERVIÇOS E DIFERENCIAIS</h2>
+            <div class="bento-grid">
+                <div class="bento-item item-1 animate-on-scroll">
+                    <i class="fa-solid fa-gears icon"></i>
+                    <h3>Câmbio Automático</h3>
+                    <p>Diagnóstico e troca de fluido com maquinário 100% automatizado.</p>
+                </div>
+                <div class="bento-item item-2 animate-on-scroll">
+                    <i class="fa-solid fa-microchip icon"></i>
+                    <h3>Diagnóstico Eletrônico</h3>
+                    <p>Scanners de última geração para uma análise precisa de injeção, ABS e mais.</p>
+                </div>
+                <div class="bento-item item-3 animate-on-scroll">
+                    <i class="fa-solid fa-camera icon"></i>
+                    <h3>Transparência Total</h3>
+                    <p>Acompanhe o serviço com fotos e vídeos enviados direto no seu WhatsApp.</p>
+                </div>
+                <div class="bento-item item-4 animate-on-scroll">
+                    <i class="fa-solid fa-shield-halved icon"></i>
+                    <h3>Revisão Preventiva</h3>
+                    <p>Check-up completo de mais de 80 itens de segurança e performance.</p>
+                </div>
+                 <div class="bento-item item-5 animate-on-scroll">
+                    <i class="fa-solid fa-car-battery icon"></i>
+                    <h3>Tecnologia de Ponta</h3>
+                    <p>Equipamentos que atendem e superam as especificações das montadoras.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO SLIDER INTERATIVO -->
+        <section id="interactive-value" class="container">
+             <h2 class="section-title animate-on-scroll">O VALOR DA MANUTENÇÃO EM DETALHES</h2>
+            <div class="comparison-slider animate-on-scroll">
+                <div class="image-container">
+                    <img src="assets/antes.jpg" alt="Antes" class="image-before">
+                    <img src="assets/depois.jpg" alt="Depois" class="image-after">
+                </div>
+                <div class="slider-handle">
+                    <div class="handle-line"></div>
+                    <div class="handle-circle"><i class="fa-solid fa-arrows-left-right"></i></div>
+                    <div class="handle-line"></div>
+                </div>
+                <div class="label-before">ÓLEO CONTAMINADO</div>
+                <div class="label-after">FLUIDO NOVO</div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO MICRO-DIAGNÓSTICO -->
+        <section id="diagnostico" class="container">
+             <h2 class="section-title animate-on-scroll">DIAGNÓSTICO RÁPIDO</h2>
+            <div class="diagnostic-container animate-on-scroll">
+                <!-- Step 1 -->
+                <div id="step1" class="diagnostic-step active">
+                    <h3>1/2: Onde você percebe o problema?</h3>
+                    <div class="car-map">
+                        <button class="map-point" data-area="Motor" style="top: 30%; left: 30%;">Motor</button>
+                        <button class="map-point" data-area="Rodas/Suspensão" style="top: 75%; left: 20%;">Rodas</button>
+                        <button class="map-point" data-area="Painel" style="top: 40%; left: 50%;">Painel</button>
+                        <button class="map-point" data-area="Câmbio" style="top: 60%; left: 45%;">Câmbio</button>
+                        <img src="assets/car-outline.svg" alt="Esquema do carro">
+                    </div>
+                </div>
+                <!-- Step 2 -->
+                <div id="step2" class="diagnostic-step">
+                    <h3>2/2: Qual o principal sintoma?</h3>
+                    <div class="symptom-buttons">
+                        <button class="symptom-btn" data-symptom="Luz acesa no painel">Luz Acesa no Painel</button>
+                        <button class="symptom-btn" data-symptom="Barulho estranho">Barulho Estranho</button>
+                        <button class="symptom-btn" data-symptom="Vibração ou trepidação">Vibração / Trepidação</button>
+                        <button class="symptom-btn" data-symptom="Falha ou perda de potência">Falha / Perda de Potência</button>
+                    </div>
+                </div>
+                <!-- Step 3 - Resultado -->
+                <div id="step3" class="diagnostic-step result">
+                    <h3>Diagnóstico Preliminar Concluído.</h3>
+                    <p id="diagnostic-result">Entendido. Com base nas suas informações, recomendamos uma avaliação detalhada. Nossa equipe está pronta para ajudar.</p>
+                    <a id="final-cta" href="" target="_blank" class="cta-button">
+                        <i class="fa-brands fa-whatsapp"></i>
+                        <span>FALAR COM UM TÉCNICO AGORA</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO CONTATO -->
+        <section id="contact" class="container">
+            <div class="contact-info animate-on-scroll">
+                <h2>AGENDE SUA REVISÃO OU VENHA NOS CONHECER</h2>
+                <p><i class="fa-solid fa-location-dot"></i> Rua das Engrenagens, 123 - Moema, São Paulo - SP</p>
+                <p><i class="fa-solid fa-phone"></i> (11) 98765-4321</p>
+                <p><i class="fa-solid fa-envelope"></i> contato@apexautomotivo.com.br</p>
+                <p><i class="fa-solid fa-clock"></i> Seg a Sex: 08h às 18h | Sáb: 08h às 12h</p>
+            </div>
+            <div class="map-container animate-on-scroll">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3656.098943633811!2d-46.677393084405!3d-23.60065996906236!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce5a07cf08c56f%3A0x4891b203a7e4b9a1!2sMoema%2C%20S%C3%A3o%20Paulo%20-%20SP!5e0!3m2!1spt-BR!2sbr!4v1678886400000" 
+                    width="100%" 
+                    height="100%" 
+                    style="border:0;" 
+                    allowfullscreen="" 
+                    loading="lazy" 
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
+        </section>
+    </main>
+
+    <!-- RODAPÉ -->
+    <footer>
+        <div class="container footer-content">
+            <p>&copy; 2024 Apex Centro Automotivo. Todos os direitos reservados.</p>
+            <div class="social-icons">
+                <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                <a href="#"><i class="fa-brands fa-facebook"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ======================================================================= -->
+    <!-- SCRIPT (JAVASCRIPT) EMBUTIDO                                          -->
+    <!-- ======================================================================= -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // 1. EFEITO DE SCROLL NO CABEÇALHO (HEADER)
+            const header = document.getElementById('main-header');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            });
+
+            // 2. ANIMAÇÕES AO ROLAR A PÁGINA (INTERSECTION OBSERVER)
+            const animatedElements = document.querySelectorAll('.animate-on-scroll');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+
+            animatedElements.forEach(el => observer.observe(el));
+
+            // 3. SLIDER DE COMPARAÇÃO "ANTES E DEPOIS"
+            const slider = document.querySelector('.comparison-slider');
+            if(slider) {
+                const handle = slider.querySelector('.slider-handle');
+                const imageAfter = slider.querySelector('.image-after');
+                let isDragging = false;
+
+                const startDrag = (e) => { isDragging = true; };
+                const stopDrag = () => { isDragging = false; };
+                const onDrag = (e) => {
+                    if (!isDragging) return;
+                    e.preventDefault();
+                    const clientX = e.clientX || e.touches[0].clientX;
+                    const rect = slider.getBoundingClientRect();
+                    let offsetX = clientX - rect.left;
+                    if (offsetX < 0) offsetX = 0;
+                    if (offsetX > rect.width) offsetX = rect.width;
+                    const percentage = (offsetX / rect.width) * 100;
+                    handle.style.left = `${percentage}%`;
+                    imageAfter.style.clipPath = `inset(0 0 0 ${percentage}%)`;
+                };
+
+                slider.addEventListener('mousedown', startDrag);
+                window.addEventListener('mouseup', stopDrag);
+                window.addEventListener('mousemove', onDrag);
+                slider.addEventListener('touchstart', startDrag, { passive: true });
+                window.addEventListener('touchend', stopDrag);
+                window.addEventListener('touchmove', onDrag, { passive: false });
+            }
+
+            // 4. LÓGICA DO MICRO-DIAGNÓSTICO
+            const step1 = document.getElementById('step1');
+            const step2 = document.getElementById('step2');
+            const step3 = document.getElementById('step3');
+            const mapPoints = document.querySelectorAll('.map-point');
+            const symptomBtns = document.querySelectorAll('.symptom-btn');
+            const finalCta = document.getElementById('final-cta');
+            const diagnosticResultText = document.getElementById('diagnostic-result');
+            
+            let diagnosticData = { area: '', symptom: '' };
+
+            const goToStep = (stepToShow) => {
+                [step1, step2, step3].forEach(step => step.classList.remove('active'));
+                stepToShow.classList.add('active');
+            };
+            
+            mapPoints.forEach(point => {
+                point.addEventListener('click', () => {
+                    diagnosticData.area = point.dataset.area;
+                    goToStep(step2);
+                });
+            });
+
+            symptomBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    diagnosticData.symptom = btn.dataset.symptom;
+                    updateFinalResult();
+                    goToStep(step3);
+                });
+            });
+
+            const updateFinalResult = () => {
+                const phone = "5511987654321"; // SEU NÚMERO DE WHATSAPP AQUI
+                const message = `Olá, Apex! Usei o diagnóstico rápido do site e meu carro apresenta um problema na área de *${diagnosticData.area}* com o sintoma de *"${diagnosticData.symptom}"*. Gostaria de agendar uma avaliação.`;
+                const encodedMessage = encodeURIComponent(message);
+                
+                const whatsappUrl = `https://wa.me/${phone}?text=${encodedMessage}`;
+                finalCta.href = whatsappUrl;
+
+                diagnosticResultText.textContent = `Entendido. Um problema na área de ${diagnosticData.area.toLowerCase()} com sintoma de "${diagnosticData.symptom.toLowerCase()}" pode indicar diversas causas. Para uma análise precisa, recomendamos um diagnóstico completo com nossos especialistas. Clique abaixo para falar conosco.`;
+            };
+        });
+    </script>
+</body>
+</html>
